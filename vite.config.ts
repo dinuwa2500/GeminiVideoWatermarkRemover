@@ -13,7 +13,7 @@ export default defineConfig({
           build: {
             outDir: 'dist/main',
             rollupOptions: {
-              external: ['@ffmpeg-installer/ffmpeg', '@ffprobe-installer/ffprobe', 'fluent-ffmpeg']
+              external: ['@ffmpeg-installer/ffmpeg', '@ffprobe-installer/ffprobe']
             }
           }
         }
