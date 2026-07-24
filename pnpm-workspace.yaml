@@ -1,3 +1,8 @@
-allowBuilds:
-  electron: false
-  esbuild: false
+packages:
+  - '.'
+
+onlyBuiltDependencies:
+  - electron
+  - esbuild
+  - '@ffmpeg-installer/ffmpeg'
+  - '@ffprobe-installer/ffprobe'
