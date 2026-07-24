@@ -1,0 +1,28 @@
+changelog:
+  categories:
+    - title: 🚀 New Features & Enhancements
+      labels:
+        - feature
+        - enhancement
+      keywords:
+        - feat
+        - feature
+    - title: ⚡ Engine & Performance Fixes
+      labels:
+        - fix
+        - performance
+      keywords:
+        - fix
+        - perf
+    - title: 🧰 Maintenance & Dependencies
+      labels:
+        - chore
+        - dependencies
+      keywords:
+        - chore
+        - docs
+  exclude:
+    labels:
+      - ignore
+    authors:
+      - dependabot[bot]

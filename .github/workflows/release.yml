@@ -4,6 +4,7 @@ on:
   push:
     tags:
       - 'v*'
+  workflow_dispatch:
 
 permissions:
   contents: write
@@ -16,6 +17,8 @@ jobs:
     steps:
       - name: 📥 Checkout Source Code
         uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
 
       - name: ⚙️ Setup Node.js Environment
         uses: actions/setup-node@v4
@@ -28,7 +31,10 @@ jobs:
           version: 9
 
       - name: 📥 Install Dependencies
-        run: pnpm install --frozen-lockfile
+        run: pnpm install
+
+      - name: ⚡ Download Electron Binary
+        run: node node_modules/electron/install.js
 
       - name: 🚀 Compile TypeScript & Package Electron Executable
         run: pnpm run build
@@ -43,10 +49,25 @@ jobs:
             "$hash  $($_.Name)" | Out-File -FilePath dist/SHA256SUMS.txt -Append -Encoding ascii
           }
 
-      - name: 📣 Create Professional GitHub Release & Auto-Updater Channel
+      - name: 📣 Create Automated Professional Release Page
         uses: softprops/action-gh-release@v2
         with:
           name: Gemini Video Watermark Remover ${{ github.ref_name }}
+          body: |
+            ## 🚀 Gemini Video Watermark Remover ${{ github.ref_name }}
+
+            First official production release of **Gemini Video Watermark Remover** for desktop.
+            Removes Gemini, Google Veo, and AI video watermarks from clips of any length using hardware-accelerated stream processing.
+
+            ### 🎯 Key Mechanics & Features
+            - **Streamed FFmpeg Execution**: Constant ~50MB RAM footprint for videos of any duration.
+            - **AI Auto-Detection**: Instant keyframe probing & automatic watermark ROI box placement.
+            - **Visually Lossless Output (`-crf 16`)**: Pristine video clarity with bit-for-bit audio passthrough (`-c:a copy`).
+            - **Hardware Acceleration**: Auto-detects NVIDIA NVENC and Intel QuickSync GPU encoders.
+            - **Multi-Video Batch Queue**: Queue multiple video files for sequential processing.
+
+            ---
+            ### 📜 Automatically Generated Changelog
           files: |
             dist/*.exe
             dist/*.blockmap
