@@ -44,9 +44,9 @@ jobs:
       - name: 🔐 Generate SHA-256 Checksums for Integrity Verification
         shell: powershell
         run: |
-          Get-ChildItem -Path dist/*.exe, dist/*.blockmap, dist/latest.yml -ErrorAction SilentlyContinue | ForEach-Object {
+          Get-ChildItem -Path release/*.exe, release/*.blockmap, release/latest.yml -ErrorAction SilentlyContinue | ForEach-Object {
             $hash = (Get-FileHash -Path $_.FullName -Algorithm SHA256).Hash
-            "$hash  $($_.Name)" | Out-File -FilePath dist/SHA256SUMS.txt -Append -Encoding ascii
+            "$hash  $($_.Name)" | Out-File -FilePath release/SHA256SUMS.txt -Append -Encoding ascii
           }
 
       - name: 📣 Create Automated Professional Release Page
@@ -69,10 +69,10 @@ jobs:
             ---
             ### 📜 Automatically Generated Changelog
           files: |
-            dist/*.exe
-            dist/*.blockmap
-            dist/latest.yml
-            dist/SHA256SUMS.txt
+            release/*.exe
+            release/*.blockmap
+            release/latest.yml
+            release/SHA256SUMS.txt
           draft: false
           prerelease: false
           generate_release_notes: true

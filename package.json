@@ -22,8 +22,17 @@
     "appId": "com.dinuwa.geminivideowatermarkremover",
     "productName": "Gemini Video Watermark Remover",
     "icon": "src/renderer/assets/logo.png",
+    "directories": {
+      "output": "release"
+    },
+    "files": [
+      "dist/**/*",
+      "index.html",
+      "package.json"
+    ],
     "win": {
-      "icon": "src/renderer/assets/logo.png"
+      "icon": "src/renderer/assets/logo.png",
+      "target": "nsis"
     }
   },
   "dependencies": {
