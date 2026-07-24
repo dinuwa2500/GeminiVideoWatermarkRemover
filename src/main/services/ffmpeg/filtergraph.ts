@@ -1,7 +1,7 @@
 import { ProcessingOptions } from '../../../shared/types/processing';
 
 export function buildFfmpegFilterGraph(options: ProcessingOptions): string {
-  const { box, algorithm, bandThickness = 1, blurRadius = 15 } = options;
+  const { box, algorithm, blurRadius = 15 } = options;
 
   // Sanitize coordinates (even numbers work best for FFmpeg color spaces like yuv420p)
   const x = Math.max(0, Math.floor(box.x / 2) * 2);
@@ -11,9 +11,8 @@ export function buildFfmpegFilterGraph(options: ProcessingOptions): string {
 
   switch (algorithm) {
     case 'delogo':
-      // FFmpeg delogo filter interpolates pixels using boundary values
-      const band = Math.max(1, bandThickness);
-      return `delogo=x=${x}:y=${y}:w=${w}:h=${h}:band=${band}:show=0`;
+      // FFmpeg delogo filter interpolates pixels using surrounding boundary values
+      return `delogo=x=${x}:y=${y}:w=${w}:h=${h}:show=0`;
 
     case 'blur':
       // Split stream into base video and blurred box section, then overlay back at (x,y)
@@ -21,15 +20,11 @@ export function buildFfmpegFilterGraph(options: ProcessingOptions): string {
       return `[0:v]split[main][crop_src];[crop_src]crop=${w}:${h}:${x}:${y},boxblur=luma_radius=${radius}:luma_power=2[blurred];[main][blurred]overlay=${x}:${y}`;
 
     case 'crop':
-      // If watermark is in corner, crop remaining main video frame
-      // Here we assume cropping out bottom region or right region depending on position
+      // Crop remaining main video frame out of corner
       return `crop=iw-${w}:ih-${h}:0:0`;
 
     case 'opencv-inpaint':
-      // Standard delogo fallback if python inpaint is disabled
-      return `delogo=x=${x}:y=${y}:w=${w}:h=${h}:band=1:show=0`;
-
     default:
-      return `delogo=x=${x}:y=${y}:w=${w}:h=${h}:band=1:show=0`;
+      return `delogo=x=${x}:y=${y}:w=${w}:h=${h}:show=0`;
   }
 }

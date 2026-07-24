@@ -13,9 +13,10 @@ export function getFfmpegPath(): string {
   // 1. Try static installer dependency (@ffmpeg-installer/ffmpeg)
   try {
     const ffmpegInstaller = require('@ffmpeg-installer/ffmpeg');
-    if (ffmpegInstaller.path && fs.existsSync(ffmpegInstaller.path)) {
-      resolvedFfmpegPath = ffmpegInstaller.path;
-      return resolvedFfmpegPath;
+    const installerPath = ffmpegInstaller?.path;
+    if (installerPath && typeof installerPath === 'string' && fs.existsSync(installerPath)) {
+      resolvedFfmpegPath = installerPath;
+      return installerPath;
     }
   } catch (e) {
     // Ignore error, proceed to fallback
@@ -25,7 +26,7 @@ export function getFfmpegPath(): string {
   try {
     execSync('ffmpeg -version', { stdio: 'ignore' });
     resolvedFfmpegPath = 'ffmpeg';
-    return resolvedFfmpegPath;
+    return 'ffmpeg';
   } catch (e) {
     // Not in system path
   }
@@ -34,7 +35,7 @@ export function getFfmpegPath(): string {
   const appResourcesPath = path.join(process.resourcesPath || '', 'ffmpeg.exe');
   if (fs.existsSync(appResourcesPath)) {
     resolvedFfmpegPath = appResourcesPath;
-    return resolvedFfmpegPath;
+    return appResourcesPath;
   }
 
   return 'ffmpeg'; // Default fallback
@@ -48,9 +49,10 @@ export function getFfprobePath(): string {
   // 1. Try static installer dependency (@ffprobe-installer/ffprobe)
   try {
     const ffprobeInstaller = require('@ffprobe-installer/ffprobe');
-    if (ffprobeInstaller.path && fs.existsSync(ffprobeInstaller.path)) {
-      resolvedFfprobePath = ffprobeInstaller.path;
-      return resolvedFfprobePath;
+    const installerPath = ffprobeInstaller?.path;
+    if (installerPath && typeof installerPath === 'string' && fs.existsSync(installerPath)) {
+      resolvedFfprobePath = installerPath;
+      return installerPath;
     }
   } catch (e) {
     // Ignore error
@@ -60,7 +62,7 @@ export function getFfprobePath(): string {
   try {
     execSync('ffprobe -version', { stdio: 'ignore' });
     resolvedFfprobePath = 'ffprobe';
-    return resolvedFfprobePath;
+    return 'ffprobe';
   } catch (e) {
     // Not in system path
   }

@@ -5,6 +5,7 @@ contextBridge.exposeInMainWorld('electronAPI', {
   selectVideoFile: () => ipcRenderer.invoke('dialog:selectVideo'),
   selectSavePath: (defaultName: string) => ipcRenderer.invoke('dialog:selectSavePath', defaultName),
   probeVideo: (filePath: string) => ipcRenderer.invoke('video:probe', filePath),
+  autoDetectWatermark: (filePath: string) => ipcRenderer.invoke('video:autoDetectWatermark', filePath),
   startProcessing: (options: ProcessingOptions) => ipcRenderer.invoke('video:startProcessing', options),
   cancelProcessing: (jobId: string) => ipcRenderer.invoke('video:cancelProcessing', jobId),
   getHardwareInfo: () => ipcRenderer.invoke('system:getHardwareInfo'),

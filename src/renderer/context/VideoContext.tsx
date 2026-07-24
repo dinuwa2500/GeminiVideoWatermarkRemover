@@ -1,7 +1,7 @@
 import React, { createContext, useContext, useState, useEffect } from 'react';
 import { VideoMetadata, BoundingBox, PresetType } from '../../shared/types/video';
 import { ProcessingOptions, ProgressStatus, BatchItem, RemovalAlgorithm, EncoderCodec } from '../../shared/types/processing';
-import { HardwareInfo } from '../../shared/types/ipc';
+import { HardwareInfo, DetectionResult } from '../../shared/types/ipc';
 import { GEMINI_WATERMARK_PRESETS } from '../../shared/constants/presets';
 
 interface VideoContextType {
@@ -37,6 +37,8 @@ interface VideoContextType {
   activeTab: 'editor' | 'batch' | 'preview';
   setActiveTab: (tab: 'editor' | 'batch' | 'preview') => void;
   completedOutputPath: string | null;
+  detectionResult: DetectionResult | null;
+  runAutoDetection: (filePath: string) => Promise<void>;
 }
 
 const VideoContext = createContext<VideoContextType | undefined>(undefined);
@@ -48,15 +50,16 @@ export const VideoProvider: React.FC<{ children: React.ReactNode }> = ({ childre
   const [encoder, setEncoder] = useState<EncoderCodec>('libx264');
   const [blurRadius, setBlurRadius] = useState<number>(15);
   const [bandThickness, setBandThickness] = useState<number>(2);
-  const [crf, setCrf] = useState<number>(22);
+  const [crf, setCrf] = useState<number>(16); // Default 16 = Visually Lossless (Zero Quality Damage)
   const [preserveAudio, setPreserveAudio] = useState<boolean>(true);
-  const [hardwareAccel, setHardwareAccel] = useState<boolean>(true);
+  const [hardwareAccel, setHardwareAccel] = useState<boolean>(false);
   const [hardwareInfo, setHardwareInfo] = useState<HardwareInfo | null>(null);
   const [progressStatus, setProgressStatus] = useState<ProgressStatus | null>(null);
   const [isProcessing, setIsProcessing] = useState<boolean>(false);
   const [batchQueue, setBatchQueue] = useState<BatchItem[]>([]);
   const [activeTab, setActiveTab] = useState<'editor' | 'batch' | 'preview'>('editor');
   const [completedOutputPath, setCompletedOutputPath] = useState<string | null>(null);
+  const [detectionResult, setDetectionResult] = useState<DetectionResult | null>(null);
 
   // Default ROI Box
   const [roiBox, setRoiBox] = useState<BoundingBox>({ x: 0, y: 0, w: 200, h: 100 });
@@ -66,11 +69,6 @@ export const VideoProvider: React.FC<{ children: React.ReactNode }> = ({ childre
     if (window.electronAPI) {
       window.electronAPI.getHardwareInfo().then((info) => {
         setHardwareInfo(info);
-        if (info.hasNvenc) {
-          setEncoder('h264_nvenc');
-        } else if (info.hasQsv) {
-          setEncoder('h264_qsv');
-        }
       }).catch(console.error);
 
       // Subscribe to real-time processing progress events from Electron Main process
@@ -87,21 +85,31 @@ export const VideoProvider: React.FC<{ children: React.ReactNode }> = ({ childre
     }
   }, []);
 
-  // Recalculate ROI Box whenever active video or preset changes
-  useEffect(() => {
-    if (!activeVideo) return;
-
-    const preset = GEMINI_WATERMARK_PRESETS.find((p) => p.id === selectedPreset) || GEMINI_WATERMARK_PRESETS[0];
-    const x = Math.round((preset.relX / 100) * activeVideo.width);
-    const y = Math.round((preset.relY / 100) * activeVideo.height);
-    const w = Math.round((preset.relW / 100) * activeVideo.width);
-    const h = Math.round((preset.relH / 100) * activeVideo.height);
-
-    setRoiBox({ x, y, w, h });
-  }, [activeVideo, selectedPreset]);
+  // Run Auto Detection whenever a video file is loaded
+  const runAutoDetection = async (filePath: string) => {
+    if (!window.electronAPI) return;
+    try {
+      const res = await window.electronAPI.autoDetectWatermark(filePath);
+      setDetectionResult(res);
+      if (res.detected && res.box) {
+        setRoiBox(res.box);
+        setSelectedPreset('gemini-bottom-right');
+      }
+    } catch (e) {
+      console.error('Auto detection error:', e);
+    }
+  };
 
   const selectPreset = (presetId: PresetType) => {
     setSelectedPreset(presetId);
+    if (presetId !== 'custom' && activeVideo) {
+      const preset = GEMINI_WATERMARK_PRESETS.find((p) => p.id === presetId) || GEMINI_WATERMARK_PRESETS[0];
+      const x = Math.round((preset.relX / 100) * activeVideo.width);
+      const y = Math.round((preset.relY / 100) * activeVideo.height);
+      const w = Math.round((preset.relW / 100) * activeVideo.width);
+      const h = Math.round((preset.relH / 100) * activeVideo.height);
+      setRoiBox({ x, y, w, h });
+    }
   };
 
   const addToQueue = (item: BatchItem) => {
@@ -133,7 +141,7 @@ export const VideoProvider: React.FC<{ children: React.ReactNode }> = ({ childre
       blurRadius,
       crf,
       preserveAudio,
-      hardwareAccel
+      hardwareAccel: encoder.includes('nvenc') || encoder.includes('qsv') || encoder.includes('amf')
     };
 
     setIsProcessing(true);
@@ -199,7 +207,9 @@ export const VideoProvider: React.FC<{ children: React.ReactNode }> = ({ childre
         cancelProcessing,
         activeTab,
         setActiveTab,
-        completedOutputPath
+        completedOutputPath,
+        detectionResult,
+        runAutoDetection
       }}
     >
       {children}

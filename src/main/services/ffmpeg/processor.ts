@@ -62,10 +62,8 @@ export async function processVideoJob(
 
   // Video Codec selection
   let videoCodec = options.encoder || 'libx264';
-  if (options.hardwareAccel) {
-    if (options.encoder === 'h264_nvenc' || options.encoder === 'hevc_nvenc') {
-      videoCodec = options.encoder;
-    }
+  if (!options.hardwareAccel && (videoCodec.includes('nvenc') || videoCodec.includes('qsv') || videoCodec.includes('amf'))) {
+    videoCodec = 'libx264';
   }
 
   args.push('-c:v', videoCodec);
@@ -96,7 +94,6 @@ export async function processVideoJob(
       stderrBuffer += text;
 
       // Extract progress line using Regex
-      // Example: frame=  450 fps= 45 q=28.0 size=    3456kB time=00:00:15.00 bitrate=1887.4kbits/s speed=1.5x
       const frameMatch = text.match(/frame=\s*(\d+)/);
       const fpsMatch = text.match(/fps=\s*([\d.]+)/);
       const timeMatch = text.match(/time=\s*([\d:.]+)/);

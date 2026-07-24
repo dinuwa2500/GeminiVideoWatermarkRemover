@@ -1,9 +1,9 @@
 import React, { useRef, useState, useEffect } from 'react';
 import { useVideoContext } from '../../context/VideoContext';
-import { Play, Pause, RotateCcw, Maximize2, Move } from 'lucide-react';
+import { Play, Pause, RotateCcw, Maximize2, Move, Sparkles, CheckCircle2 } from 'lucide-react';
 
 export const WatermarkCanvas: React.FC = () => {
-  const { activeVideo, roiBox, setRoiBox, selectPreset } = useVideoContext();
+  const { activeVideo, roiBox, setRoiBox, selectPreset, detectionResult } = useVideoContext();
   const videoRef = useRef<HTMLVideoElement>(null);
   const containerRef = useRef<HTMLDivElement>(null);
 
@@ -129,7 +129,7 @@ export const WatermarkCanvas: React.FC = () => {
 
   return (
     <div className="flex flex-col h-full w-full bg-slate-950/80 rounded-2xl border border-slate-800 p-4 shadow-2xl relative overflow-hidden">
-      {/* Top Frame Bar Info */}
+      {/* Top Frame Bar Info & AI Detection Status */}
       <div className="flex items-center justify-between pb-3 text-xs text-slate-400 border-b border-slate-800/80 mb-3">
         <div className="flex items-center gap-3">
           <span className="font-semibold text-slate-200 truncate max-w-xs">{activeVideo.fileName}</span>
@@ -137,6 +137,14 @@ export const WatermarkCanvas: React.FC = () => {
             {activeVideo.width}x{activeVideo.height} @ {activeVideo.fps} FPS
           </span>
         </div>
+
+        {detectionResult?.detected && (
+          <div className="flex items-center gap-1.5 px-3 py-1 rounded-full bg-emerald-500/10 border border-emerald-500/30 text-emerald-400 text-xs font-semibold animate-fade-in">
+            <CheckCircle2 className="w-3.5 h-3.5" />
+            AI Auto-Detected Watermark ({Math.round(detectionResult.confidence * 100)}% Confidence)
+          </div>
+        )}
+
         <div className="flex items-center gap-3 font-mono text-[11px]">
           <span>Box: ({roiBox.x}, {roiBox.y}) [{roiBox.w}x{roiBox.h}px]</span>
         </div>
@@ -169,8 +177,8 @@ export const WatermarkCanvas: React.FC = () => {
         >
           {/* Label Badge */}
           <div className="bg-sky-500 text-slate-950 text-[10px] font-bold font-mono px-1.5 py-0.5 rounded w-max flex items-center gap-1 shadow">
-            <Move className="w-3 h-3" />
-            WATERMARK MASK
+            <Sparkles className="w-3 h-3" />
+            AUTO-DETECTED MASK
           </div>
 
           {/* Resize Corner Handle */}

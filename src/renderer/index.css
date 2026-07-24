@@ -1,15 +1,17 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
 /* Premium Dark Theme & Glassmorphism Design System */
-@layer base {
-  :root {
-    --bg-main: #090d16;
-    --bg-surface: #111827;
-    --bg-card: rgba(17, 24, 39, 0.7);
-    --border-glass: rgba(255, 255, 255, 0.08);
-    --accent-primary: #38bdf8;
-    --accent-indigo: #6366f1;
-    --accent-emerald: #10b981;
-    --accent-rose: #f43f5e;
-  }
+:root {
+  --bg-main: #090d16;
+  --bg-surface: #111827;
+  --bg-card: rgba(17, 24, 39, 0.7);
+  --border-glass: rgba(255, 255, 255, 0.08);
+  --accent-primary: #38bdf8;
+  --accent-indigo: #6366f1;
+  --accent-emerald: #10b981;
+  --accent-rose: #f43f5e;
 }
 
 * {

@@ -3,7 +3,7 @@ import { useVideoContext } from '../../context/VideoContext';
 import { UploadCloud, FileVideo, Sparkles, FolderOpen } from 'lucide-react';
 
 export const VideoDropzone: React.FC = () => {
-  const { setActiveVideo } = useVideoContext();
+  const { setActiveVideo, runAutoDetection } = useVideoContext();
   const [isDragging, setIsDragging] = useState(false);
   const [loading, setLoading] = useState(false);
 
@@ -15,6 +15,7 @@ export const VideoDropzone: React.FC = () => {
         setLoading(true);
         const meta = await window.electronAPI.probeVideo(filePath);
         setActiveVideo(meta);
+        await runAutoDetection(filePath);
       }
     } catch (err: any) {
       alert(`Error probing video: ${err.message}`);
@@ -45,6 +46,7 @@ export const VideoDropzone: React.FC = () => {
           setLoading(true);
           const meta = await window.electronAPI.probeVideo(filePath);
           setActiveVideo(meta);
+          await runAutoDetection(filePath);
         } catch (err: any) {
           alert(`Error reading dropped video file: ${err.message}`);
         } finally {
@@ -76,11 +78,11 @@ export const VideoDropzone: React.FC = () => {
       </div>
 
       <h3 className="text-xl font-bold text-slate-100 mb-2">
-        {loading ? 'Analyzing Video Streams...' : 'Drag & Drop Video File Here'}
+        {loading ? 'AI Auto-Detecting Gemini Watermark...' : 'Drag & Drop Video File Here'}
       </h3>
 
       <p className="text-sm text-slate-400 max-w-md text-center mb-6">
-        Supports videos of <span className="text-sky-400 font-medium">any length</span> (MP4, MOV, MKV, WebM, AVI). Instant AI watermark box overlay detection.
+        Automatic AI watermark box detection & <span className="text-sky-400 font-medium">zero quality loss</span> (MP4, MOV, MKV, WebM, AVI).
       </p>
 
       <button
@@ -95,12 +97,12 @@ export const VideoDropzone: React.FC = () => {
       <div className="mt-8 flex items-center gap-6 text-xs text-slate-500 font-mono">
         <span className="flex items-center gap-1.5">
           <FileVideo className="w-3.5 h-3.5 text-slate-400" />
-          4K & 60fps Ready
+          Visually Lossless (Zero Quality Damage)
         </span>
         <span>•</span>
-        <span>Hardware Accelerated</span>
+        <span>Auto AI Detection</span>
         <span>•</span>
-        <span>Zero Memory Leak</span>
+        <span>Passthrough Audio</span>
       </div>
     </div>
   );

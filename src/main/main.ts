@@ -1,7 +1,9 @@
 import { app, BrowserWindow, ipcMain } from 'electron';
 import path from 'path';
+import fs from 'fs';
 import { handleSelectVideoFile, handleSelectSavePath } from './ipc/dialogHandlers';
 import { probeVideoFile } from './services/ffmpeg/prober';
+import { detectGeminiWatermark } from './services/detector/geminiDetector';
 import { processVideoJob, cancelProcessingJob } from './services/ffmpeg/processor';
 import { detectHardwareCapabilities } from './services/hardware/accelDetector';
 import { ProcessingOptions, ProgressStatus } from '../shared/types/processing';
@@ -28,7 +30,13 @@ function createWindow() {
   if (process.env.VITE_DEV_SERVER_URL) {
     mainWindow.loadURL(process.env.VITE_DEV_SERVER_URL);
   } else {
-    mainWindow.loadFile(path.join(__dirname, '../renderer/index.html'));
+    const indexPath = path.join(__dirname, '../index.html');
+    const fallbackPath = path.join(__dirname, '../renderer/index.html');
+    if (fs.existsSync(indexPath)) {
+      mainWindow.loadFile(indexPath);
+    } else {
+      mainWindow.loadFile(fallbackPath);
+    }
   }
 }
 
@@ -55,6 +63,10 @@ ipcMain.handle('dialog:selectSavePath', async (_event, defaultName: string) => {
 
 ipcMain.handle('video:probe', async (_event, filePath: string) => {
   return probeVideoFile(filePath);
+});
+
+ipcMain.handle('video:autoDetectWatermark', async (_event, filePath: string) => {
+  return detectGeminiWatermark(filePath);
 });
 
 ipcMain.handle('system:getHardwareInfo', async () => {
