@@ -1,42 +1,57 @@
-name: Build & Publish Release
+name: Enterprise Release Pipeline
 
 on:
   push:
     tags:
       - 'v*'
 
+permissions:
+  contents: write
+
 jobs:
-  release:
+  build-and-release:
+    name: Build & Package Production Binary
     runs-on: windows-latest
 
     steps:
-      - name: Checkout Repository
+      - name: 📥 Checkout Source Code
         uses: actions/checkout@v4
 
-      - name: Setup Node.js
+      - name: ⚙️ Setup Node.js Environment
         uses: actions/setup-node@v4
         with:
           node-version: 20
 
-      - name: Install pnpm
+      - name: 📦 Setup pnpm Package Manager
         uses: pnpm/action-setup@v3
         with:
           version: 9
 
-      - name: Install Dependencies
-        run: pnpm install
+      - name: 📥 Install Dependencies
+        run: pnpm install --frozen-lockfile
 
-      - name: Build Desktop Application & Executable
+      - name: 🚀 Compile TypeScript & Package Electron Executable
         run: pnpm run build
         env:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
-      - name: Create GitHub Release
-        uses: softprops/action-gh-release@v1
+      - name: 🔐 Generate SHA-256 Checksums for Integrity Verification
+        shell: powershell
+        run: |
+          Get-ChildItem -Path dist/*.exe, dist/*.blockmap, dist/latest.yml -ErrorAction SilentlyContinue | ForEach-Object {
+            $hash = (Get-FileHash -Path $_.FullName -Algorithm SHA256).Hash
+            "$hash  $($_.Name)" | Out-File -FilePath dist/SHA256SUMS.txt -Append -Encoding ascii
+          }
+
+      - name: 📣 Create Professional GitHub Release & Auto-Updater Channel
+        uses: softprops/action-gh-release@v2
         with:
+          name: Gemini Video Watermark Remover ${{ github.ref_name }}
           files: |
             dist/*.exe
             dist/*.blockmap
+            dist/latest.yml
+            dist/SHA256SUMS.txt
           draft: false
           prerelease: false
           generate_release_notes: true
