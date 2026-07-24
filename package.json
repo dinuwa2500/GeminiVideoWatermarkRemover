@@ -18,6 +18,14 @@
   ],
   "author": "Dinuwa",
   "license": "MIT",
+  "build": {
+    "appId": "com.dinuwa.geminivideowatermarkremover",
+    "productName": "Gemini Video Watermark Remover",
+    "icon": "src/renderer/assets/logo.png",
+    "win": {
+      "icon": "src/renderer/assets/logo.png"
+    }
+  },
   "dependencies": {
     "@ffmpeg-installer/ffmpeg": "^1.1.0",
     "@ffprobe-installer/ffprobe": "^1.4.1",

@@ -11,12 +11,17 @@ import { ProcessingOptions, ProgressStatus } from '../shared/types/processing';
 let mainWindow: BrowserWindow | null = null;
 
 function createWindow() {
+  const appIconPath = path.join(__dirname, '../../src/renderer/assets/logo.png');
+  const fallbackIconPath = path.join(__dirname, '../renderer/assets/logo.png');
+  const iconPath = fs.existsSync(appIconPath) ? appIconPath : fs.existsSync(fallbackIconPath) ? fallbackIconPath : undefined;
+
   mainWindow = new BrowserWindow({
     width: 1280,
     height: 850,
     minWidth: 1000,
     minHeight: 700,
     title: 'Gemini Video Watermark Remover',
+    icon: iconPath,
     frame: true,
     backgroundColor: '#0f172a', // Sleek dark slate
     webPreferences: {
