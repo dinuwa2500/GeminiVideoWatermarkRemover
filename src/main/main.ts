@@ -1,4 +1,4 @@
-import { app, BrowserWindow, ipcMain } from 'electron';
+import { app, BrowserWindow, ipcMain, Menu } from 'electron';
 import path from 'path';
 import fs from 'fs';
 import { handleSelectVideoFile, handleSelectSavePath } from './ipc/dialogHandlers';
@@ -11,6 +11,8 @@ import { ProcessingOptions, ProgressStatus } from '../shared/types/processing';
 let mainWindow: BrowserWindow | null = null;
 
 function createWindow() {
+  // Remove top default application menu bar (File, Edit, View, Window, Help)
+  Menu.setApplicationMenu(null);
   const appIconPath = path.join(__dirname, '../../src/renderer/assets/logo.png');
   const fallbackIconPath = path.join(__dirname, '../renderer/assets/logo.png');
   const iconPath = fs.existsSync(appIconPath) ? appIconPath : fs.existsSync(fallbackIconPath) ? fallbackIconPath : undefined;
