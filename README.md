@@ -24,7 +24,7 @@ A modern, high-performance desktop application to detect and remove Gemini, Goog
 
 ## Download
 
-Download the latest production installer from the [Releases](https://github.com/dinuwa/GeminiVideoWatermarkRemover/releases) page.
+Download the latest production installer from the [Releases](https://github.com/dinuwa2500/GeminiVideoWatermarkRemover/releases) page.
 
 | File | Description | Platform |
 |------|-------------|----------|
@@ -50,7 +50,7 @@ Download the latest production installer from the [Releases](https://github.com/
 
 ### Desktop GUI Workflow
 
-1. Download `GeminiVideoWatermarkRemover-Setup-1.0.0.exe` from the [Releases](https://github.com/dinuwa/GeminiVideoWatermarkRemover/releases) page.
+1. Download `GeminiVideoWatermarkRemover-Setup-1.0.0.exe` from the [Releases](https://github.com/dinuwa2500/GeminiVideoWatermarkRemover/releases) page.
 2. Run the installer and launch **Gemini Video Watermark Remover**.
 3. Drag & drop your watermarked video into the app dropzone.
 4. Choose a **Preset** (e.g., *Gemini Bottom-Right*) or drag the bounding box on the video canvas to cover the watermark.
@@ -140,7 +140,7 @@ src/
 
 ```bash
 # 1. Clone the repository
-git clone https://github.com/dinuwa/GeminiVideoWatermarkRemover.git
+git clone https://github.com/dinuwa2500/GeminiVideoWatermarkRemover.git
 cd GeminiVideoWatermarkRemover
 
 # 2. Install dependencies
