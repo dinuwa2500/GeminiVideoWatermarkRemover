@@ -57,7 +57,7 @@ jobs:
         uses: softprops/action-gh-release@v2
         with:
           name: Gemini Video Watermark Remover ${{ github.ref_name }}
-          body_path: RELEASE_NOTES.md
+          body: ${{ steps.changelog.outputs.notes }}
           files: |
             release/*.exe
             release/*.blockmap

@@ -27,12 +27,14 @@ ${notes}
 
 ---
 ### 🔒 Verification & Integrity
-Verify downloaded binaries using \`SHA256SUMS.txt\` attached below.
-`;
+Verify downloaded binaries using \`SHA256SUMS.txt\` attached below.`;
 
 fs.writeFileSync(notesPath, releaseBody, 'utf8');
 console.log(`Successfully generated release notes for ${ref} at ${notesPath}`);
 
 if (process.env.GITHUB_OUTPUT) {
-  fs.appendFileSync(process.env.GITHUB_OUTPUT, `notes<<EOF\n${releaseBody}\nEOF\n`);
+  const delimiter = `EOF_${Date.now()}`;
+  const outputData = `notes<<${delimiter}\n${releaseBody}\n${delimiter}\n`;
+  fs.appendFileSync(process.env.GITHUB_OUTPUT, outputData, 'utf8');
+  console.log('Appended notes output to GITHUB_OUTPUT');
 }
