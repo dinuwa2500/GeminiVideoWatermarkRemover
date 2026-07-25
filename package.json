@@ -25,6 +25,10 @@
     "directories": {
       "output": "release"
     },
+    "asarUnpack": [
+      "**/@ffmpeg-installer/**/*",
+      "**/@ffprobe-installer/**/*"
+    ],
     "files": [
       "dist/**/*",
       "index.html",
