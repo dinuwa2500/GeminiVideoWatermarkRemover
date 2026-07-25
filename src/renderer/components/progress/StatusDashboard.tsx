@@ -1,9 +1,9 @@
 import React from 'react';
 import { useVideoContext } from '../../context/VideoContext';
-import { CheckCircle2, AlertTriangle, XCircle, Gauge, Clock, Film, Sparkles, Folder } from 'lucide-react';
+import { CheckCircle2, AlertTriangle, XCircle, Gauge, Clock, Film, Sparkles, Folder, RotateCcw } from 'lucide-react';
 
 export const StatusDashboard: React.FC = () => {
-  const { progressStatus, cancelProcessing, isProcessing, completedOutputPath } = useVideoContext();
+  const { progressStatus, cancelProcessing, isProcessing, completedOutputPath, resetEditor } = useVideoContext();
 
   if (!progressStatus || progressStatus.state === 'idle') return null;
 
@@ -116,14 +116,22 @@ export const StatusDashboard: React.FC = () => {
 
       {/* Completed Success Actions */}
       {isCompleted && completedOutputPath && (
-        <div className="mt-4 pt-3 border-t border-slate-800/80 flex items-center justify-between text-xs">
-          <span className="text-slate-400 truncate max-w-md">Saved to: {completedOutputPath}</span>
-          <button
-            onClick={() => window.electronAPI?.showItemInFolder(completedOutputPath)}
-            className="px-4 py-1.5 rounded-xl bg-emerald-500 hover:bg-emerald-400 text-slate-950 font-bold flex items-center gap-1.5 transition-all shadow-md shadow-emerald-500/20"
-          >
-            <Folder className="w-3.5 h-3.5" /> Open Output Folder
-          </button>
+        <div className="mt-4 pt-3 border-t border-slate-800/80 flex items-center justify-between text-xs gap-3">
+          <span className="text-slate-400 truncate max-w-sm">Saved to: {completedOutputPath}</span>
+          <div className="flex items-center gap-2 shrink-0">
+            <button
+              onClick={resetEditor}
+              className="px-3.5 py-1.5 rounded-xl bg-slate-950 hover:bg-slate-800 text-slate-300 border border-slate-800 font-semibold flex items-center gap-1.5 transition-colors"
+            >
+              <RotateCcw className="w-3.5 h-3.5" /> Back to Home
+            </button>
+            <button
+              onClick={() => window.electronAPI?.showItemInFolder(completedOutputPath)}
+              className="px-4 py-1.5 rounded-xl bg-emerald-500 hover:bg-emerald-400 text-slate-950 font-bold flex items-center gap-1.5 transition-all shadow-md shadow-emerald-500/20"
+            >
+              <Folder className="w-3.5 h-3.5" /> Open Output Folder
+            </button>
+          </div>
         </div>
       )}
     </div>

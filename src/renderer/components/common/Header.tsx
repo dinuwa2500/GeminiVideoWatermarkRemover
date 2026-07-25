@@ -4,14 +4,18 @@ import { Video, Cpu, Zap, Layers } from "lucide-react";
 import logoImg from "../../assets/logo.png";
 
 export const Header: React.FC = () => {
-  const { hardwareInfo, isProcessing, activeTab, setActiveTab } =
+  const { hardwareInfo, isProcessing, activeTab, setActiveTab, resetEditor } =
     useVideoContext();
 
   return (
     <header className="h-16 border-b border-slate-800 bg-slate-900/80 backdrop-blur-md px-6 flex items-center justify-between shrink-0 select-none z-30">
       {/* Brand & Logo */}
-      <div className="flex items-center gap-3">
-        <div className="w-10 h-10 rounded-xl bg-slate-950 border border-sky-500/30 p-1 flex items-center justify-center shadow-lg shadow-sky-500/20 overflow-hidden">
+      <div 
+        onClick={resetEditor}
+        className="flex items-center gap-3 cursor-pointer group"
+        title="Back to Home / Import Video"
+      >
+        <div className="w-10 h-10 rounded-xl bg-slate-950 border border-sky-500/30 p-1 flex items-center justify-center shadow-lg shadow-sky-500/20 overflow-hidden group-hover:border-sky-400 transition-colors">
           <img
             src={logoImg}
             alt="Gemini Watermark Remover Logo"
@@ -20,11 +24,11 @@ export const Header: React.FC = () => {
         </div>
         <div>
           <div className="flex items-center gap-2">
-            <h1 className="font-bold text-lg text-gradient leading-none">
+            <h1 className="font-bold text-lg text-gradient leading-none group-hover:opacity-90">
               Gemini Video Watermark Remover
             </h1>
             <span className="text-[10px] uppercase font-mono px-2 py-0.5 rounded-full bg-sky-500/10 text-sky-400 border border-sky-500/30">
-              v1.2.3 Pro
+              v1.2.4 Pro
             </span>
           </div>
           <p className="text-xs text-slate-400">

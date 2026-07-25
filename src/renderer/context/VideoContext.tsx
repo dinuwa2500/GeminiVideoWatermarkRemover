@@ -39,6 +39,7 @@ interface VideoContextType {
   completedOutputPath: string | null;
   detectionResult: DetectionResult | null;
   runAutoDetection: (filePath: string) => Promise<void>;
+  resetEditor: () => void;
 }
 
 const VideoContext = createContext<VideoContextType | undefined>(undefined);
@@ -173,6 +174,14 @@ export const VideoProvider: React.FC<{ children: React.ReactNode }> = ({ childre
     }
   };
 
+  const resetEditor = () => {
+    setActiveVideo(null);
+    setProgressStatus(null);
+    setCompletedOutputPath(null);
+    setDetectionResult(null);
+    setRoiBox({ x: 0, y: 0, w: 200, h: 100 });
+  };
+
   return (
     <VideoContext.Provider
       value={{
@@ -209,7 +218,8 @@ export const VideoProvider: React.FC<{ children: React.ReactNode }> = ({ childre
         setActiveTab,
         completedOutputPath,
         detectionResult,
-        runAutoDetection
+        runAutoDetection,
+        resetEditor
       }}
     >
       {children}
