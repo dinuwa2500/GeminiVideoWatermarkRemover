@@ -24,7 +24,7 @@ export const Header: React.FC = () => {
               Gemini Video Watermark Remover
             </h1>
             <span className="text-[10px] uppercase font-mono px-2 py-0.5 rounded-full bg-sky-500/10 text-sky-400 border border-sky-500/30">
-              v1.1.0 Pro
+              v1.2.0 Pro
             </span>
           </div>
           <p className="text-xs text-slate-400">
