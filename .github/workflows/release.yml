@@ -49,25 +49,23 @@ jobs:
             "$hash  $($_.Name)" | Out-File -FilePath release/SHA256SUMS.txt -Append -Encoding ascii
           }
 
+      - name: 📝 Extract Release Notes from CHANGELOG.md
+        shell: powershell
+        run: |
+          $ver = '${{ github.ref_name }}'.TrimStart('v')
+          $content = Get-Content CHANGELOG.md -Raw
+          if ($content -match '(?s)## \[' + [regex]::Escape($ver) + '\][^\n]*\n+(.*?)(?=\n## \[|\Z)') {
+              $notes = $matches[1].Trim()
+          } else {
+              $notes = "Production release ${{ github.ref_name }} of Gemini Video Watermark Remover."
+          }
+          Set-Content -Path release/NOTES.md -Value $notes -Encoding UTF8
+
       - name: 📣 Create Automated Professional Release Page
         uses: softprops/action-gh-release@v2
         with:
           name: Gemini Video Watermark Remover ${{ github.ref_name }}
-          body: |
-            ## 🚀 Gemini Video Watermark Remover ${{ github.ref_name }}
-
-            First official production release of **Gemini Video Watermark Remover** for desktop.
-            Removes Gemini, Google Veo, and AI video watermarks from clips of any length using hardware-accelerated stream processing.
-
-            ### 🎯 Key Mechanics & Features
-            - **Streamed FFmpeg Execution**: Constant ~50MB RAM footprint for videos of any duration.
-            - **AI Auto-Detection**: Instant keyframe probing & automatic watermark ROI box placement.
-            - **Visually Lossless Output (`-crf 16`)**: Pristine video clarity with bit-for-bit audio passthrough (`-c:a copy`).
-            - **Hardware Acceleration**: Auto-detects NVIDIA NVENC and Intel QuickSync GPU encoders.
-            - **Multi-Video Batch Queue**: Queue multiple video files for sequential processing.
-
-            ---
-            ### 📜 Automatically Generated Changelog
+          body_path: release/NOTES.md
           files: |
             release/*.exe
             release/*.blockmap
