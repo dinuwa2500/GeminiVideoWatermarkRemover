@@ -50,20 +50,7 @@ jobs:
           }
 
       - name: 📝 Extract Release Notes from CHANGELOG.md
-        shell: powershell
-        run: |
-          $ver = '${{ github.ref_name }}'.TrimStart('v')
-          $content = Get-Content CHANGELOG.md -Raw
-          $notes = ""
-          if ($content -match '(?s)## \[' + [regex]::Escape($ver) + '\][^\n]*\n+(.*?)(?=\n## \[|\Z)') {
-              $notes = $matches[1].Trim()
-          } else {
-              $notes = "Production release ${{ github.ref_name }} of Gemini Video Watermark Remover."
-          }
-
-          $header = "## 🚀 Gemini Video Watermark Remover ${{ github.ref_name }}`n`n### 📦 What's Changed in this Release`n`n" + $notes + "`n`n---`n### 🔒 Verification & Integrity`nVerify downloaded binaries using SHA256SUMS.txt attached below."
-
-          Set-Content -Path release/NOTES.md -Value $header -Encoding UTF8
+        run: node scripts/extract-release-notes.js
 
       - name: 📣 Create Automated Professional Release Page
         uses: softprops/action-gh-release@v2
