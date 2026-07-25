@@ -61,17 +61,7 @@ jobs:
               $notes = "Production release ${{ github.ref_name }} of Gemini Video Watermark Remover."
           }
 
-          $header = @"
-          ## 🚀 Gemini Video Watermark Remover ${{ github.ref_name }}
-
-          ### 📦 What's Changed in this Release
-
-          $notes
-
-          ---
-          ### 🔒 Verification & Integrity
-          Verify downloaded binaries using `SHA256SUMS.txt` attached below.
-          "@
+          $header = "## 🚀 Gemini Video Watermark Remover ${{ github.ref_name }}`n`n### 📦 What's Changed in this Release`n`n" + $notes + "`n`n---`n### 🔒 Verification & Integrity`nVerify downloaded binaries using SHA256SUMS.txt attached below."
 
           Set-Content -Path release/NOTES.md -Value $header -Encoding UTF8
 
