@@ -45,7 +45,7 @@ Download the latest production installer from the [Releases](https://github.com/
 ## Quick Start
 
 <p align="center">
-  <img src="src/renderer/assets/logo.png" alt="App Icon" width="160" height="160">
+  <img src="src/renderer/assets/logo.png" alt="App Icon" width="100" height="100">
 </p>
 
 ### Desktop GUI Workflow
