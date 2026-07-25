@@ -7,6 +7,12 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ---
 
+## [1.1.0] - 2026-07-25
+
+### 🚀 Added
+- **Custom ROI Dimension Inputs**: Users can now directly enter exact pixel values for Width (W), Height (H), Position X, and Position Y for the watermark removal square.
+- **Enhanced Preset Controls**: Preset selector automatically updates to "Custom Size" state when custom numerical dimensions are edited.
+
 ## [1.0.0] - 2026-07-24
 
 ### 🚀 Added
