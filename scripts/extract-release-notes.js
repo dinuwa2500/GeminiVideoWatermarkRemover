@@ -5,7 +5,7 @@ const ref = process.env.GITHUB_REF_NAME || 'v1.2.0';
 const ver = ref.replace(/^v/, '');
 
 const changelogPath = path.join(__dirname, '../CHANGELOG.md');
-const notesPath = path.join(__dirname, '../release/NOTES.md');
+const notesPath = path.join(process.cwd(), 'RELEASE_NOTES.md');
 
 let notes = `Production release ${ref} of Gemini Video Watermark Remover.`;
 
@@ -30,10 +30,9 @@ ${notes}
 Verify downloaded binaries using \`SHA256SUMS.txt\` attached below.
 `;
 
-const releaseDir = path.dirname(notesPath);
-if (!fs.existsSync(releaseDir)) {
-  fs.mkdirSync(releaseDir, { recursive: true });
-}
-
 fs.writeFileSync(notesPath, releaseBody, 'utf8');
 console.log(`Successfully generated release notes for ${ref} at ${notesPath}`);
+
+if (process.env.GITHUB_OUTPUT) {
+  fs.appendFileSync(process.env.GITHUB_OUTPUT, `notes<<EOF\n${releaseBody}\nEOF\n`);
+}

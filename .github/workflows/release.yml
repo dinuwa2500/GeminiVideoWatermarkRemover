@@ -50,13 +50,14 @@ jobs:
           }
 
       - name: 📝 Extract Release Notes from CHANGELOG.md
+        id: changelog
         run: node scripts/extract-release-notes.js
 
       - name: 📣 Create Automated Professional Release Page
         uses: softprops/action-gh-release@v2
         with:
           name: Gemini Video Watermark Remover ${{ github.ref_name }}
-          body_path: release/NOTES.md
+          body_path: RELEASE_NOTES.md
           files: |
             release/*.exe
             release/*.blockmap
