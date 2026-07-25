@@ -1,4 +1,4 @@
-import { app, BrowserWindow, ipcMain, Menu } from 'electron';
+import { app, BrowserWindow, ipcMain, Menu, shell } from 'electron';
 import path from 'path';
 import fs from 'fs';
 import { handleSelectVideoFile, handleSelectSavePath } from './ipc/dialogHandlers';
@@ -100,4 +100,12 @@ ipcMain.handle('video:startProcessing', async (_event, options: ProcessingOption
 
 ipcMain.handle('video:cancelProcessing', async (_event, jobId: string) => {
   return cancelProcessingJob(jobId);
+});
+
+ipcMain.handle('system:showItemInFolder', async (_event, fullPath: string) => {
+  if (fullPath && fs.existsSync(fullPath)) {
+    shell.showItemInFolder(fullPath);
+    return true;
+  }
+  return false;
 });

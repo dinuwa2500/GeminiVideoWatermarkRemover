@@ -25,6 +25,7 @@ export interface ElectronAPI {
   startProcessing: (options: ProcessingOptions) => Promise<{ success: boolean; jobId: string; error?: string }>;
   cancelProcessing: (jobId: string) => Promise<boolean>;
   getHardwareInfo: () => Promise<HardwareInfo>;
+  showItemInFolder: (fullPath: string) => Promise<boolean>;
   onProgress: (callback: (status: ProgressStatus) => void) => () => void;
 }
 

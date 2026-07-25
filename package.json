@@ -1,6 +1,6 @@
 {
   "name": "gemini-video-watermark-remover",
-  "version": "1.2.0",
+  "version": "1.2.3",
   "description": "Desktop Application to remove Gemini watermarks from videos of any length using FFmpeg streaming engine",
   "main": "dist/main/main.js",
   "scripts": {

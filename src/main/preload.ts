@@ -9,6 +9,7 @@ contextBridge.exposeInMainWorld('electronAPI', {
   startProcessing: (options: ProcessingOptions) => ipcRenderer.invoke('video:startProcessing', options),
   cancelProcessing: (jobId: string) => ipcRenderer.invoke('video:cancelProcessing', jobId),
   getHardwareInfo: () => ipcRenderer.invoke('system:getHardwareInfo'),
+  showItemInFolder: (fullPath: string) => ipcRenderer.invoke('system:showItemInFolder', fullPath),
   onProgress: (callback: (status: ProgressStatus) => void) => {
     const handler = (_event: any, status: ProgressStatus) => callback(status);
     ipcRenderer.on('video:progress', handler);

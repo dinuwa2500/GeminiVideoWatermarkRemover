@@ -7,9 +7,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ---
 
-## [1.2.0] - 2026-07-25
+## [1.2.3] - 2026-07-25
 
 ### 🚀 Added
+- **Open Output Folder**: Click "Open Output Folder" on completion to instantly highlight and reveal saved video files directly in Windows File Explorer via Electron native shell API.
 - **Native Window UI**: Removed top default Electron application menu bar (`File`, `Edit`, `View`, `Window`, `Help`) for a clean, modern borderless appearance.
 - **Custom ROI Dimension Inputs**: Direct numerical pixel input controls for Width (W), Height (H), Position X, and Position Y of the watermark removal square.
 - **Automated Release Descriptions**: Dynamic release changelog generator integrated into GitHub Actions release workflow.

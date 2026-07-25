@@ -119,10 +119,10 @@ export const StatusDashboard: React.FC = () => {
         <div className="mt-4 pt-3 border-t border-slate-800/80 flex items-center justify-between text-xs">
           <span className="text-slate-400 truncate max-w-md">Saved to: {completedOutputPath}</span>
           <button
-            onClick={() => alert(`File saved at:\n${completedOutputPath}`)}
+            onClick={() => window.electronAPI?.showItemInFolder(completedOutputPath)}
             className="px-4 py-1.5 rounded-xl bg-emerald-500 hover:bg-emerald-400 text-slate-950 font-bold flex items-center gap-1.5 transition-all shadow-md shadow-emerald-500/20"
           >
-            <Folder className="w-3.5 h-3.5" /> Show Output File
+            <Folder className="w-3.5 h-3.5" /> Open Output Folder
           </button>
         </div>
       )}
